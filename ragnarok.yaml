@@ -8,10 +8,10 @@ data:
     APP_NAME=Ragnarok GRPC
     PORT=8080
     DB_CONNECTION=mysql
-    DB_HOST=172.18.133.231
+    DB_HOST=172.28.84.136
     DB_PORT=3306
-    DB_USER=root
-    DB_PASSWORD=root
+    DB_USER=bri
+    DB_PASSWORD='P@ssw0rd1@#'
     DB_NAME=card_management
     DB_TIMEZONE=Asia/Jakarta
 ---
@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
         - name: ragnarok
-          image: npangestu/morges-test-deploy:dev
+          image: npangestu/test-deploy:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -84,19 +84,20 @@ spec:
       imagePullSecrets:
         - name: regcred
 ---
-kind: Ingress
 apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: ragnarok-ingress
   namespace: card-pro
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx
   rules:
-    - host: ragnarok-app.local
+    - host: ragnarok.local
       http:
         paths:
           - path: /
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: ragnarok
